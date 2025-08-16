@@ -6,14 +6,19 @@
   "scripts": {
     "start:prod": "NODE_ENV=production node ./src/server.js",
     "start:dev": "nodemon ./src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+     "migrate": "node-pg-migrate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@hapi/hapi": "^21.4.3",
-    "nodemon": "^3.1.10"
+    "dotenv": "^17.2.1",
+    "joi": "^18.0.0",
+    "nanoid": "^5.1.5",
+    "node-pg-migrate": "^8.0.3",
+    "nodemon": "^3.1.10",
+    "pg": "^8.16.3"
   }
 }
