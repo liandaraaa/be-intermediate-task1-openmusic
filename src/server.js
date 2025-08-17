@@ -1,4 +1,5 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config();
 import Hapi from '@hapi/hapi';
 import AlbumsService from './services/postgres/AlbumService.js';
 import albums from './api/albums/index.js';

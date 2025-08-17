@@ -6,7 +6,8 @@
   "scripts": {
     "start:prod": "NODE_ENV=production node ./src/server.js",
     "start:dev": "nodemon ./src/server.js",
-     "migrate": "node-pg-migrate"
+    "migrate": "node-pg-migrate",
+     "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,12 @@
     "node-pg-migrate": "^8.0.3",
     "nodemon": "^3.1.10",
     "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "eslint": "^9.33.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.3.0",
+    "typescript-eslint": "^8.39.1"
   }
 }
