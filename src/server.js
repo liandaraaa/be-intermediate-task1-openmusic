@@ -4,9 +4,13 @@ import AlbumsService from './services/postgres/AlbumService.js';
 import albums from './api/albums/index.js';
 import AlbumsValidator from './validator/albums/index.js';
 import ClientError from './exceptions/ClientError.js'; 
+import songs from './api/songs/index.js';
+import SongService from './services/postgres/SongService.js';
+import SongsValidator from './validator/songs/index.js';
 
 const init = async () => {
   const albumService = new AlbumsService();
+  const songService = new SongService();
   const server = Hapi.server({
     port: process.env.PORT,
     host: process.env.HOST,
@@ -17,13 +21,24 @@ const init = async () => {
     },
   });
  
-  await server.register({
-    plugin: albums,
-    options: {
-      service: albumService,
-      validator: AlbumsValidator,
-    },
-  });
+  await server.register(
+    [
+      {
+        plugin: albums,
+        options: {
+          service: albumService,
+          validator: AlbumsValidator,
+        },
+      },
+      {
+        plugin: songs,
+        options: {
+          service: songService,
+          validator: SongsValidator,
+        },
+      }
+    ]
+  );
 
   server.ext('onPreResponse', (request, h) => {
    const { response } = request;
