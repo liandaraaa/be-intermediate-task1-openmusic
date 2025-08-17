@@ -8,6 +8,7 @@ class SongHandler {
     this.getSongByIdHandler = this.getSongByIdHandler.bind(this);
     this.putSongByIdHandler = this.putSongByIdHandler.bind(this);
     this.deleteSongByIdHandler = this.deleteSongByIdHandler.bind(this);
+    this.deleteSongsHandler = this.deleteSongsHandler.bind(this);
   }
  
   async postSongHandler(request, h) {
@@ -73,6 +74,15 @@ class SongHandler {
     return {
       status: 'success',
       message: 'Song berhasil dihapus',
+    };
+  }
+
+  async deleteSongsHandler() {
+    await this._service.deleteAllSongs();
+ 
+    return {
+      status: 'success',
+      message: 'Semua song berhasil dihapus',
     };
   }
 }

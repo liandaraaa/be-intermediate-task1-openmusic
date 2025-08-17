@@ -24,6 +24,11 @@ const routes = (handler) => [
     path: '/songs/{id}',
     handler: handler.deleteSongByIdHandler,
   },
+  {
+    method: 'DELETE',
+    path: '/songs',
+    handler: handler.deleteSongsHandler,
+  },
 ];
 
 export default routes;

@@ -100,6 +100,19 @@ class AlbumService {
       throw new NotFoundError('Album gagal dihapus. Id tidak ditemukan');
     }
   }
+
+  async deleteAllAlbums() {
+    const query = {
+      text: 'DELETE FROM Album',
+    };
+ 
+    await this._pool.query(query);
+
+    return {
+      status: 'success',
+      message: 'Semua album berhasil dihapus',
+    };
+  }
 }
 
 export default AlbumService;

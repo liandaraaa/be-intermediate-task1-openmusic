@@ -8,6 +8,7 @@ class AlbumHandler {
     this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
     this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
     this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
+    this.deleteAlbumsHandler = this.deleteAlbumsHandler.bind(this);
   }
  
   async postAlbumHandler(request, h) {
@@ -69,6 +70,15 @@ class AlbumHandler {
       message: 'Album berhasil dihapus',
     };
   }
+
+  async deleteAlbumsHandler() {
+    await this._service.deleteAllAlbums();
+ 
+    return {
+      status: 'success',
+      message: 'Semua album berhasil dihapus',
+    };
+  } 
 }
  
 export default AlbumHandler;

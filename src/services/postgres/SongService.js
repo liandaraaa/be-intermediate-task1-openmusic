@@ -86,6 +86,14 @@ class SongService {
       throw new NotFoundError('Song gagal dihapus. Id tidak ditemukan');
     }
   }
+
+  async deleteAllSongs() {
+    const query = {
+      text: 'DELETE FROM Songs',
+    };
+
+    await this._pool.query(query);
+  } 
 }
 
 export default SongService;
