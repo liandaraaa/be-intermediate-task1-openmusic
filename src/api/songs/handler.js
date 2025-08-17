@@ -27,8 +27,9 @@ class SongHandler {
     return response;
   }
  
-  async getSongsHandler() {
-    const data = await this._service.getSongs();
+  async getSongsHandler(request, h) {
+    const { title, performer } = request.query;
+    const data = await this._service.getSongs(title, performer);
     const songs = data.map(song => ({
       id: song.id,
       title: song.title,
