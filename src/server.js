@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import Hapi from '@hapi/hapi';
+import Jwt from '@hapi/jwt';
 
 import AlbumsService from './services/postgres/AlbumService.js';
 import albums from './api/albums/index.js';
@@ -16,10 +17,17 @@ import UsersValidator from './validator/users/index.js';
 import UsersService from './services/postgres/UsersService.js';
 import users from './api/users/index.js';
 
+import authentications from './api/authentications/index.js';
+import AuthenticationsService from './services/postgres/AuthenticationsService.js';
+import AuthenticationsValidator from './validator/authentications/index.js';
+import TokenManager from './tokenize/TokenManager.js';
+
+
 const init = async () => {
   const albumService = new AlbumsService();
   const songService = new SongService();
   const userService = new UsersService();
+  const authenticationsService = new AuthenticationsService();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -30,6 +38,12 @@ const init = async () => {
       },
     },
   });
+
+    await server.register([
+    {
+      plugin: Jwt,
+    },
+  ]);
  
   await server.register(
     [
@@ -54,6 +68,15 @@ const init = async () => {
           validator: UsersValidator,
         },
       },
+      {
+      plugin: authentications,
+      options: {
+        authenticationsService: authenticationsService,
+        usersService: userService,
+        tokenManager: TokenManager,
+        validator: AuthenticationsValidator,
+      },
+    },
     ]
   );
 
