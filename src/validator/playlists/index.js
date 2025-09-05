@@ -1,6 +1,7 @@
 import{
   PostSongToPlaylistPayloadSchema,
-  PostPlaylistPayloadSchema
+  PostPlaylistPayloadSchema,
+  DeleteSongToPlaylistPayloadSchema
 } from './schema.js';
 import InvariantError from '../../exceptions/InvariantError.js';
 
@@ -13,6 +14,12 @@ const PlaylistsValidator = {
   },
   validatePostSongToPlaylistPayload: (payload) => {
     const validationResult = PostSongToPlaylistPayloadSchema.validate(payload);
+    if (validationResult.error) {
+      throw new InvariantError(validationResult.error.message);
+    }
+  },
+  validateDeleteSongFromPlaylistPayload: (payload) => {
+    const validationResult = DeleteSongToPlaylistPayloadSchema.validate(payload);
     if (validationResult.error) {
       throw new InvariantError(validationResult.error.message);
     }
