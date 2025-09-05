@@ -15,6 +15,11 @@ export default defineConfig([
         process: "readonly", // Add process to the global configuration
       },
     },
+    settings:{
+      react: {
+        version: "detect",
+      },
+    }
   },
   tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
