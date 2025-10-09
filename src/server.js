@@ -27,6 +27,9 @@ import playlists from './api/playlists/index.js';
 import PlaylistsService from './services/postgres/PlaylistsService.js';
 import PlaylistsValidator from './validator/playlists/index.js';
 
+import ExportsValidator from './validator/exports/index.js';
+import ProducerService from './services/rabbitmq/ProducerService.js';
+import _exports from './api/exports/index.js';
 
 const init = async () => {
   const albumService = new AlbumsService();
@@ -106,6 +109,14 @@ const init = async () => {
           validator: PlaylistsValidator,
         },
       },
+       {
+      plugin: _exports,
+      options: {
+        service: ProducerService,
+        validator: ExportsValidator,
+        playlistsService: playlistsService
+      },
+    },
     ],
   );
 
