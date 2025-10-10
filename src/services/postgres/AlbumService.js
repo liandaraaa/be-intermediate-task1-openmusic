@@ -134,8 +134,6 @@ class AlbumService {
   }
 
   async verifyUserAuthorization(userId){
-    console.log('cek verify user authorization..')
-    
      const query = {
       text: 'SELECT * FROM users WHERE id = $1',
       values: [userId],
@@ -159,8 +157,6 @@ class AlbumService {
   }
 
   async verifyUserLikeAlbum(userId, albumId){
-    console.log('cek verify user like album..')
-
      const query = {
       text: 'SELECT * FROM user_album_likes WHERE user_id = $1 AND album_id = $2',
       values: [userId, albumId],
