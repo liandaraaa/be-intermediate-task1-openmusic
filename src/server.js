@@ -31,12 +31,27 @@ import ExportsValidator from './validator/exports/index.js';
 import ProducerService from './services/rabbitmq/ProducerService.js';
 import _exports from './api/exports/index.js';
 
+import UploadsValidator from './validator/upload/index.js';
+import StorageService from './services/storage/StorageService.js';
+import uploads from './api/uploads/index.js';
+
+import inert from '@hapi/inert';
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
 const init = async () => {
   const albumService = new AlbumsService();
   const songService = new SongService();
   const userService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const playlistsService = new PlaylistsService();
+
+    const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+  const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/images'));
+ 
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -52,6 +67,9 @@ const init = async () => {
     {
       plugin: Jwt,
     },
+    {
+      plugin: inert,
+    }
   ]);
 
   server.auth.strategy('openmusic_jwt', 'jwt', {
@@ -117,6 +135,14 @@ const init = async () => {
         playlistService: playlistsService
       },
     },
+    {
+      plugin: uploads,
+      options: {
+        service: storageService,
+        validator: UploadsValidator,
+        albumService: albumService
+      },
+    }
     ],
   );
 

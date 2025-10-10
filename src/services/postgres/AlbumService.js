@@ -44,7 +44,7 @@ class AlbumService {
 
    async getAlbumById(id) {
     const query = {
-      text: 'SELECT tbl_album.id, tbl_album.name , tbl_album.year, tbl_songs.title, tbl_songs.performer, tbl_songs.id as id_song FROM Album as tbl_album  left join songs as tbl_songs on tbl_album.id = tbl_songs.album_id WHERE tbl_album.id = $1',
+      text: 'SELECT tbl_album.id, tbl_album.name , tbl_album.year, tbl_album.cover_url, tbl_songs.title, tbl_songs.performer, tbl_songs.id as id_song FROM Album as tbl_album  left join songs as tbl_songs on tbl_album.id = tbl_songs.album_id WHERE tbl_album.id = $1',
       values: [id],
     };
 
@@ -59,6 +59,7 @@ class AlbumService {
         acc.id = row.id;
         acc.name = row.name;
         acc.year = row.year;
+        acc.coverUrl = row.cover_url;
         acc.songs = [];
       }
       if (row.id_song) {
@@ -113,6 +114,39 @@ class AlbumService {
       message: 'Semua album berhasil dihapus',
     };
   }
+
+  async addAlbumCoverUrl(id, coverUrl) {
+    const updatedAt = new Date().toISOString();
+
+    console.log('adding cover to album', id, coverUrl)
+    
+    const query = {
+      text: 'UPDATE album SET cover_url = $1, updated_at = $2 WHERE id = $3 RETURNING id, cover_url',
+      values: [coverUrl, updatedAt, id],
+    };
+
+
+    console.log('query cover to album', query)
+
+    const result = await this._pool.query(query);
+
+    // try {
+    //   await this._pool.query(query);
+      
+    // } catch (error) {
+      
+    // console.log('adding cover to album error', error)
+    // }
+
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Gagal menambahkan cover album. Id tidak ditemukan');
+    }
+
+    return result.rows[0];
+  }
+
+
 }
 
 export default AlbumService;
