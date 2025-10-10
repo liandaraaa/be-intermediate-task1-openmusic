@@ -117,27 +117,13 @@ class AlbumService {
 
   async addAlbumCoverUrl(id, coverUrl) {
     const updatedAt = new Date().toISOString();
-
-    console.log('adding cover to album', id, coverUrl)
     
     const query = {
       text: 'UPDATE album SET cover_url = $1, updated_at = $2 WHERE id = $3 RETURNING id, cover_url',
       values: [coverUrl, updatedAt, id],
     };
 
-
-    console.log('query cover to album', query)
-
     const result = await this._pool.query(query);
-
-    // try {
-    //   await this._pool.query(query);
-      
-    // } catch (error) {
-      
-    // console.log('adding cover to album error', error)
-    // }
-
 
     if (!result.rows.length) {
       throw new NotFoundError('Gagal menambahkan cover album. Id tidak ditemukan');

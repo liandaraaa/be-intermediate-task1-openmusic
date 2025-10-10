@@ -13,15 +13,10 @@ class UploadsHandler {
     const { cover } = request.payload;
     const albumId = request.params.id;
 
-    console.log('cek post upload', cover, albumId)
-
     this._validator.validateImageHeaders(cover.hapi.headers);
  
     const filename = await this._service.writeFile(cover, cover.hapi);
-    const coverUrl = `http://${process.env.HOST}:${process.env.PORT}/album/${albumId}/images/${filename}`
-
-
-    console.log('cek file upload', filename, coverUrl)
+    const coverUrl =  `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`
 
     await this._ablumService.addAlbumCoverUrl(albumId,coverUrl)
  
