@@ -1,14 +1,11 @@
+import autoBind from "auto-bind";
+
 class AlbumHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
- 
-    this.postAlbumHandler = this.postAlbumHandler.bind(this);
-    this.getAlbumsHandler = this.getAlbumsHandler.bind(this);
-    this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
-    this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
-    this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
-    this.deleteAlbumsHandler = this.deleteAlbumsHandler.bind(this);
+
+    autoBind(this)
   }
  
   async postAlbumHandler(request, h) {
@@ -79,6 +76,44 @@ class AlbumHandler {
       message: 'Semua album berhasil dihapus',
     };
   } 
+
+async postLikeAlbumHandler(request, h) {
+    const { id } = request.params;
+    const { id: credentialId } = request.auth.credentials;
+
+    await this._service.verifyAlbumId(id)
+    await this._service.verifyUserAuthorization(credentialId)
+    await this._service.verifyUserLikeAlbum(credentialId, id)
+    await this._service.likeAlbum(credentialId,id);
+ 
+   const response = h.response({
+      status: 'success',
+      message: 'Kamu menyukai album ini'
+    });
+    response.code(201);
+    return response;
+  }
+
+  async deleteLikeAlbumHandler(request) {
+    const { id } = request.params;
+    const { id: credentialId } = request.auth.credentials;
+    
+    await this._service.unlikeAlbum(credentialId,id);
+      
+      return {
+        status: 'success',
+        message: 'Kamu batal menyukai album ini',
+      };
+    }
+
+  async getLikesAlbumHandler(request){
+    const { id } = request.params;
+
+    const result = await this._service.getAlbumLikes(id)
+
+    return result
+  }
+
 }
  
 export default AlbumHandler;
