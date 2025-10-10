@@ -5,8 +5,9 @@ import NotFoundError from '../../exceptions/NotFoundError.js';
 import { mapDBToModel } from '../../utils/index.js';
  
 class AlbumService {
-  constructor() {
+  constructor(cacheService) {
     this._pool = new Pool();
+    this._cacheService = cacheService;
   }
  
   async addAlbum({name, year}) {
@@ -177,6 +178,8 @@ class AlbumService {
       values: [userId, albumId],
     };
     await this._pool.query(query);
+
+    await this._cacheService.delete(`album-likes:${albumId}`);
   }
 
   async unlikeAlbum(userId, albumId) {
@@ -186,22 +189,41 @@ class AlbumService {
     };
 
     await this._pool.query(query);
+
+    await this._cacheService.delete(`album-likes:${albumId}`);
   }
 
   async getAlbumLikes(albumId) {
-    const query = {
+     try {
+      // mendapatkan album like dari cache
+      const result = await this._cacheService.get(`album-likes:${albumId}`);
+      return {
+      status: 'success',
+      data: {
+        likes: JSON.parse(result)
+      },
+      fromCache:true
+    };
+    } catch (error) {
+      const query = {
       text: 'SELECT COUNT(*) AS likes FROM user_album_likes WHERE album_id = $1',
       values: [albumId],
     };
+
     const result = await this._pool.query(query);
     const likes = result.rows[0] ? parseInt(result.rows[0].likes, 10) : 0;
+
+  // catatan akan disimpan pada cache sebelum fungsi getAlbumLikes dikembalikan
+      await this._cacheService.set(`album-likes:${albumId}`, JSON.stringify(likes));
 
     return {
       status: 'success',
       data: {
         likes: likes
       },
+      fromCache:false
     };
+    }
   }
 
 }

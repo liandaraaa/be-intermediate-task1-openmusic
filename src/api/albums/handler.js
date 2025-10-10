@@ -106,12 +106,18 @@ async postLikeAlbumHandler(request, h) {
       };
     }
 
-  async getLikesAlbumHandler(request){
+  async getLikesAlbumHandler(request, h){
     const { id } = request.params;
 
     const result = await this._service.getAlbumLikes(id)
 
-    return result
+    const response = h.response(result);
+
+  if (result.fromCache) {
+    response.header('X-Data-Source', 'cache');
+  }
+
+  return response;
   }
 
 }

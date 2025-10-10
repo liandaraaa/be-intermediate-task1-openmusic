@@ -41,8 +41,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+import CacheService from './services/redis/CacheService.js';
+
 const init = async () => {
-  const albumService = new AlbumsService();
+   const cacheService = new CacheService();
+  const albumService = new AlbumsService(cacheService);
   const songService = new SongService();
   const userService = new UsersService();
   const authenticationsService = new AuthenticationsService();
